@@ -4,7 +4,11 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   db.all('SELECT * FROM todos', [], (err, rows) => {
-    res.json(rows);
+    const todos = rows.map(todo => ({
+      ...todo,
+      completed: Boolean(todo.completed)
+    }));
+    res.json(todos);
   });
 });
 
