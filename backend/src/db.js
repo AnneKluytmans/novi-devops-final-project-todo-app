@@ -14,8 +14,8 @@ db.serialize(() => {
   db.run(
     `INSERT INTO todos (title, completed) VALUES
       ('Write Dockerfile', 1),
-      ('Build CI/CD pipeline', 0),
-      ('Write documentation', 0)
+      ('Design CI/CD pipeline', 1)
+      ('Build CI/CD pipeline', 1),
     `
   );
 
