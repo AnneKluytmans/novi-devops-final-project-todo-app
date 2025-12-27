@@ -11,13 +11,14 @@ db.serialize(() => {
   `);
 
   // Seed data
-  db.run(
-    `INSERT INTO todos (title, completed) VALUES
-      ('Write Dockerfile', 1),
-      ('Design CI/CD pipeline', 1)
-      ('Build CI/CD pipeline', 1),
-    `
-  );
+  db.run(`
+  INSERT INTO todos (title, completed) VALUES
+    ('Write Dockerfile', 1),
+    ('Design CI/CD pipeline', 1),
+    ('Build CI/CD pipeline', 1)
+  `, (err) => {
+    if (err) console.error('Seed data failed:', err.message);
+  });
 
 });
 
