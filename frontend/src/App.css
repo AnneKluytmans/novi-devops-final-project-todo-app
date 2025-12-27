@@ -33,7 +33,7 @@ li {
   border-bottom: 1px solid #ddd;
 }
 
-.add-todo {
+.todo-form {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;

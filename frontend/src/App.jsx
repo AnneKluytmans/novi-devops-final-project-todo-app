@@ -1,40 +1,44 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import {
+  getTodos,
+  createTodo
+} from './api';
 import './App.css';
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [title, setTitle] = useState('');
+  const [newTodo, setNewTodo] = useState('');
 
   const fetchTodos = () => {
-    axios.get('/api/todos').then(res => setTodos(res.data));
+    getTodos().then(res => setTodos(res.data));
   };
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  const addTodo = async () => {
-    if (!title) return;
+  const handleAddTodo = async (e) => {
+    e.preventDefault();
+    if (!newTodo.trim()) return;
 
-    await axios.post('/api/todos', { title });
-    setTitle('');
+    await createTodo(newTodo);
+    setNewTodo('');
     fetchTodos();
   };
 
   return (
-    <div className="container">
+    <div className='container'>
       <h1>Todo App</h1>
 
-      <div className="add-todo">
+      <form onSubmit={handleAddTodo} className='todo-form'>
         <input
-          type="text"
-          placeholder="New todo..."
-          value={title}
-          onChange={e => setTitle(e.target.value)}
+          type='text'
+          placeholder='New todo...'
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
         />
-        <button onClick={addTodo}>Add</button>
-      </div>
+        <button type='submit'>Add</button>
+      </form>
       
       <ul>
         {todos.map(t => (
