@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   getTodos,
   createTodo,
+  updateTodo,
   deleteTodo
 } from './api';
 import './App.css';
@@ -27,6 +28,11 @@ function App() {
     fetchTodos();
   };
 
+  const handleToggleComplete = async (todo) => {
+    await updateTodo(todo.id, !todo.completed);
+    fetchTodos();
+  };
+
   const handleDelete = async (id) => {
     await deleteTodo(id);
     fetchTodos();
@@ -46,11 +52,17 @@ function App() {
         <button type='submit'>Add</button>
       </form>
       
-      <ul>
+      <ul className='todo-list'>
         {todos.map(t => (
-          <li key={t.id}>
-            {t.title}
-            {t.completed && ' ✅'}
+          <li key={t.id} className={t.completed ? 'completed' : ''}>
+            <label className='todo-item'>
+              {t.title}
+              <input
+                type='checkbox'
+                checked={t.completed}
+                onChange={() => handleToggleComplete(t)}
+              />
+            </label>
 
             <button onClick={() => handleDelete(t.id)}>
               x

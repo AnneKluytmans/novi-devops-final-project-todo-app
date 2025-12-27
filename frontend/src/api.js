@@ -10,5 +10,8 @@ export const getTodos = () =>
 export const createTodo = (title) =>
     api.post(`/todos`, { title });
 
+export const updateTodo = (id, completed) =>
+    api.put(`/todos/${id}`, { completed });
+
 export const deleteTodo = (id) =>
     api.delete(`/todos/${id}`);
