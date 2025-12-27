@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
   getTodos,
-  createTodo
+  createTodo,
+  deleteTodo
 } from './api';
 import './App.css';
 
@@ -26,6 +27,11 @@ function App() {
     fetchTodos();
   };
 
+  const handleDelete = async (id) => {
+    await deleteTodo(id);
+    fetchTodos();
+  };
+
   return (
     <div className='container'>
       <h1>Todo App</h1>
@@ -45,6 +51,10 @@ function App() {
           <li key={t.id}>
             {t.title}
             {t.completed && ' ✅'}
+
+            <button onClick={() => handleDelete(t.id)}>
+              x
+            </button>
           </li>
         ))}
       </ul>

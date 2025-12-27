@@ -1,11 +1,14 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:3000/api',
+    baseURL: '/api',
 });
 
 export const getTodos = () => 
-    api.get('/todos');
+    api.get(`/todos`);
 
 export const createTodo = (title) =>
-    api.post('/todos', { title })
+    api.post(`/todos`, { title });
+
+export const deleteTodo = (id) =>
+    api.delete(`/todos/${id}`);
