@@ -56,7 +56,9 @@ function App() {
         {todos.map(t => (
           <li key={t.id} className={t.completed ? 'completed' : ''}>
             <label className='todo-item'>
-              {t.title}
+              <span className='todo-title'>
+                {t.title}
+              </span>
               <input
                 type='checkbox'
                 checked={t.completed}
