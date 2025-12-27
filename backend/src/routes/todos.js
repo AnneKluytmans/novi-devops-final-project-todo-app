@@ -33,7 +33,7 @@ router.post('/', (req, res) => {
         return res.status(500).json({ error: 'Failed to create todo' });
       }
 
-      res.status(201).json({
+      res.status(200).json({
         id: this.lastID,
         title: title.trim(),
         completed: false
