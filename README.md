@@ -151,7 +151,9 @@ cd backend
 npm test
 ```
 
-### 🐳 Docker (Optional)
+---
+
+## 🐳 Docker
 
 Build and run the application with Docker ....
 
@@ -159,6 +161,8 @@ Build and run the application with Docker ....
 ---
 
 ## Project Structure
+
+```bash
 
 todo-app/
 │
@@ -175,6 +179,7 @@ todo-app/
 ├── docker-compose.yml
 └── .github/workflows/
 
+```
 
 ---
 
