@@ -58,6 +58,43 @@ describe('GET /api/todos', () => {
   });
 });
 
+describe('GET /api/todos/:id', () => {
+  it('returns a single todo by id', async () => {
+    pool.query.mockResolvedValueOnce({
+      rowCount: 1,
+      rows: [
+        { id: 1, title: 'Test todo', completed: false },
+      ],
+    });
+
+    const res = await request(app).get('/api/todos/1');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({
+      id: 1,
+      title: 'Test todo',
+      completed: false,
+    });
+
+    expect(pool.query).toHaveBeenCalledWith(
+      'SELECT * FROM todos WHERE id = $1',
+      ['1']
+    );
+  });
+
+  it('returns 404 if todo does not exist', async () => {
+    pool.query.mockResolvedValueOnce({
+      rowCount: 0,
+      rows: [],
+    });
+
+    const res = await request(app).get('/api/todos/999');
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body).toEqual({ error: 'Todo not found' });
+  });
+});
+
 describe('PUT /api/todos/:id', () => {
   it('updates a todo', async () => {
     pool.query.mockResolvedValueOnce({
