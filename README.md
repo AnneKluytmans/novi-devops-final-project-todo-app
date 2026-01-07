@@ -44,7 +44,7 @@ This project contains a **Node.js REST API**, a **React frontend**, a **SQLite d
 
 ### 🔧 Backend (Node.js + Express)
 - RESTful API
-- SQLite database (in-memory, CI-friendly)
+- PostgreSQL
 - CRUD operations
 - Automated API tests with Jest & Supertest
 
@@ -77,6 +77,11 @@ This project contains a **Node.js REST API**, a **React frontend**, a **SQLite d
 }
 
 ```
+## Healthcheck Endpoints
+| Method | Endpoint            | Description             |
+|------|---------------------|-------------------------|
+| GET  | `/health`        | Healthcheck voor de API       |
+| GET  | `/health/db`    | Healthcheck voor de database   |
 
 ---
 
@@ -89,7 +94,7 @@ This project contains a **Node.js REST API**, a **React frontend**, a **SQLite d
 
 ### 🔧 Backend
 - Express
-- SQLite
+- PostgreSQL
 - Jest & Supertest
 
 ### 🚀 DevOps
