@@ -1,61 +1,113 @@
 const request = require('supertest');
-const app = require('../src/app');
+const express = require('express');
+const todosRouter = require('../src/routes/todos')
 
-test('POST creates a todo', async () => {
-  const res = await request(app)
-    .post('/api/todos')
-    .send({ title: 'Test todo' });
+jest.mock('../src/db', () => ({
+  pool: {
+    query: jest.fn(),
+  },
+}));
 
-  expect(res.statusCode).toBe(200);
-  expect(res.body.title).toBe('Test todo');
-  expect(res.body.completed).toBe(false);
+const { pool } = require('../src/db');
+
+const app = express();
+app.use(express.json());
+app.use('/api/todos', todosRouter);
+
+describe('POST /api/todos', () => {
+  it('creates a new todo', async () => {
+    pool.query.mockResolvedValueOnce({
+      rows: [{ id: 1, title: 'New todo', completed: false }],
+    });
+
+    const res = await request(app)
+      .post('/api/todos')
+      .send({ title: 'New todo' });
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body.title).toBe('New todo');
+  });
+
+  it('returns 400 when title is missing', async () => {
+    const res = await request(app)
+      .post('/api/todos')
+      .send({});
+
+    expect(res.statusCode).toBe(400);
+  });
 });
 
-test('GET returns all todos', async () => {
-  await request(app)
-    .post('/api/todos')
-    .send({ title: 'Another todo' });
+describe('GET /api/todos', () => {
+  it('returns all todos', async () => {
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        { id: 1, title: 'Test todo', completed: false },
+      ],
+    });
 
-  const res = await request(app).get('/api/todos');
+    const res = await request(app).get('/api/todos');
 
-  expect(res.statusCode).toBe(200);
-  expect(Array.isArray(res.body)).toBe(true);
-  expect(res.body.length).toBeGreaterThan(0);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([
+      { id: 1, title: 'Test todo', completed: false },
+    ]);
+
+    expect(pool.query).toHaveBeenCalledWith(
+      'SELECT * FROM todos ORDER BY id'
+    );
+  });
 });
 
-test('PUT updates a todo', async () => {
-  const postRes = await request(app)
-    .post('/api/todos')
-    .send({ title: 'Update me' });
+describe('PUT /api/todos/:id', () => {
+  it('updates a todo', async () => {
+    pool.query.mockResolvedValueOnce({
+      rowCount: 1,
+      rows: [{ id: 1, completed: true }],
+    });
 
-  const todoId = postRes.body.id;
+    const res = await request(app)
+      .put('/api/todos/1')
+      .send({ completed: true });
 
-  const putRes = await request(app)
-    .put(`/api/todos/${todoId}`)
-    .send({ completed: true });
+    expect(res.statusCode).toBe(200);
+  });
 
-  expect(putRes.statusCode).toBe(200);
+  it('returns 404 if todo not found', async () => {
+    pool.query.mockResolvedValueOnce({
+      rowCount: 0,
+      rows: [],
+    });
 
-  const getRes = await request(app).get('/api/todos');
-  const updatedTodo = getRes.body.find(t => t.id === todoId);
+    const res = await request(app)
+      .put('/api/todos/999')
+      .send({ completed: true });
 
-  expect(updatedTodo.completed).toBe(true);
+    expect(res.statusCode).toBe(404);
+  });
 });
 
-test('DELETE removes a todo', async () => {
-  const postRes = await request(app)
-    .post('/api/todos')
-    .send({ title: 'Delete me' });
 
-  const todoId = postRes.body.id;
+describe('DELETE /api/todos/:id', () => {
+  it('deletes a todo', async () => {
+    pool.query.mockResolvedValueOnce({
+      rowCount: 1,
+      rows: [{ id: 1 }],
+    });
 
-  const deleteRes = await request(app)
-    .delete(`/api/todos/${todoId}`);
+    const res = await request(app).delete('/api/todos/1');
 
-  expect(deleteRes.statusCode).toBe(204);
+    expect(res.statusCode).toBe(204);
+  });
 
-  const getRes = await request(app).get('/api/todos');
-  const deletedTodo = getRes.body.find(t => t.id === todoId);
+  it('returns 404 when todo does not exist', async () => {
+    pool.query.mockResolvedValueOnce({
+      rowCount: 0,
+      rows: [],
+    });
 
-  expect(deletedTodo).toBeUndefined();
+    const res = await request(app).delete('/api/todos/999');
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body).toEqual({ error: 'Todo not found' });
+  });
 });

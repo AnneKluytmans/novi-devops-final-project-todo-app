@@ -4,18 +4,20 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "jest": "^30.2.0",
-    "supertest": "^7.1.4"
+    "jest-mock": "^30.2.0",
+    "supertest": "^7.2.2"
   }
 }
