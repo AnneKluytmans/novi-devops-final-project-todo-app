@@ -173,23 +173,23 @@ todo-app/
 │
 ├── backend/
 │   ├── src/
-|       ├──config/
-|       ├──db/
-|       ├──routes/
-|       ├──app.js
-|       ├──server.js
+│       ├──config/
+│       ├──db/
+│       ├──routes/
+│       ├──app.js
+│       ├──server.js
 │   ├── tests/
-|       ├──todos.test.js
+│       ├──todos.test.js
 │   └── Dockerfile
 │
 ├── frontend/
 │   ├── src/
-|       ├──assets/
-|       ├──api.js
-|       ├──App.css
-|       ├──App.jsx
-|       ├──index.css
-|       ├──main.jsx
+│       ├──assets/
+│       ├──api.js
+│       ├──App.css
+│       ├──App.jsx
+│       ├──index.css
+│       ├──main.jsx
 │   ├── public/
 │   └── Dockerfile
 │
