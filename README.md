@@ -175,7 +175,11 @@ todo-app/
 │   ├── src/
 │       ├──config/
 │       ├──db/
+│          ├──index.js
+│          ├──init.js
 │       ├──routes/
+│          ├──health.js
+│          ├──todos.js
 │       ├──app.js
 │       ├──server.js
 │   ├── tests/
@@ -183,6 +187,7 @@ todo-app/
 │   └── Dockerfile
 │
 ├── frontend/
+│   ├── public/
 │   ├── src/
 │       ├──assets/
 │       ├──api.js
@@ -190,7 +195,7 @@ todo-app/
 │       ├──App.jsx
 │       ├──index.css
 │       ├──main.jsx
-│   ├── public/
+│   └── index.html
 │   └── Dockerfile
 │
 ├── docker-compose.yml
