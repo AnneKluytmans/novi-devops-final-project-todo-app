@@ -184,6 +184,7 @@ todo-app/
 │       ├──server.js
 │   ├── tests/
 │       ├──todos.test.js
+│       ├──todos.integration.test.js
 │   └── Dockerfile
 │
 ├── frontend/
