@@ -2,7 +2,7 @@
 
 Simple **Todo application** built to demonstrate **DevOps and CI/CD** for my final assignment for the DevOps module at [Novi University](https://www.novi.nl). 
 
-This project contains a **Node.js REST API**, a **React frontend**, a **SQLite database**, including **Docker and CI/CD pipelines**.
+This project contains a **Node.js REST API**, a **React frontend**, a **PostgreSQL database**, including **Docker and CI/CD pipeline**.
 
 ---
 
@@ -40,19 +40,19 @@ This project contains a **Node.js REST API**, a **React frontend**, a **SQLite d
 - Add a new todo
 - Mark todos as complete
 - Delete todos
-- Clean and minimal UI with basic styling
+- UI with basic styling
 
 ### 🔧 Backend (Node.js + Express)
 - RESTful API
-- PostgreSQL
-- CRUD operations
+- PostgreSQL Database (persistent-storage)
+- CRUD operations for todos (post, get, put, delete)
 - Automated API tests with Jest & Supertest
 
 ### 🚀 DevOps
 - Node.js LTS versions
 - Automated tests for backend
-- Dockerfile & Dokcer Compose
-- CI/CD pipelines
+- Dockerfiles & Dokcer Compose
+- CI/CD pipeline
 
 ---
 
