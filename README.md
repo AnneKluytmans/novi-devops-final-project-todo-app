@@ -126,7 +126,7 @@ cd todo-app
 ```bash
 cd backend
 npm install
-nvm run
+nvm use 20
 npm start
 ```
 
