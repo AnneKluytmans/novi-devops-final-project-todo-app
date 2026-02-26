@@ -153,7 +153,13 @@ http://localhost:5173
 Backend tests:
 ```bash
 cd backend
-npm test
+npm run test
+```
+
+Frontend tests:
+```bash
+cd frontend
+npm run test
 ```
 
 ---
@@ -194,6 +200,7 @@ todo-app/
 │       ├──api.js
 │       ├──App.css
 │       ├──App.jsx
+│       ├──App.test.jsx
 │       ├──index.css
 │       ├──main.jsx
 │   └── index.html
@@ -202,7 +209,8 @@ todo-app/
 ├── docker-compose.yml
 └── .github/
    └── workflows/
-           └── cicd.yml 
+           └── frontend-cicd.yml 
+           └── backend-cicd.yml 
 
 ```
 
