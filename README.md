@@ -154,6 +154,8 @@ Backend tests:
 ```bash
 cd backend
 npm run test
+npm run test:unit
+npm run test:integration
 ```
 
 Frontend tests:
@@ -189,8 +191,10 @@ todo-app/
 │       ├──app.js
 │       ├──server.js
 │   ├── tests/
-│       ├──todos.test.js
-│       ├──todos.integration.test.js
+│       ├──integration/
+│          ├──todos.integration.test.js
+│       ├──unit/
+│          ├──todos.test.js
 │   └── Dockerfile
 │
 ├── frontend/
