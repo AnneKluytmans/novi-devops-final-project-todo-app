@@ -1,14 +1,14 @@
 const request = require('supertest');
 const express = require('express');
-const todosRouter = require('../src/routes/todos')
+const todosRouter = require('../../src/routes/todos')
 
-jest.mock('../src/db', () => ({
+jest.mock('../../src/db', () => ({
   pool: {
     query: jest.fn(),
   },
 }));
 
-const { pool } = require('../src/db');
+const { pool } = require('../../src/db');
 
 const app = express();
 app.use(express.json());
