@@ -1,0 +1,75 @@
+services:
+
+  #-----------------------------------------------------------------------------------
+  # Database
+  #-----------------------------------------------------------------------------------
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+
+  #-----------------------------------------------------------------------------------
+  # Backend API
+  #-----------------------------------------------------------------------------------
+  api:
+    build: ./backend
+    container_name: backend_api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT_API}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:${PORT_API}/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+      - frontend
+
+  #-----------------------------------------------------------------------------------
+  # Frontend (React)
+  #-----------------------------------------------------------------------------------
+  webui:
+    build: ./frontend
+    container_name: frontend_web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${PORT_WEB}:80"
+    networks:
+      - frontend
+
+#-----------------------------------------------------------------------------------
+# Volumes
+#-----------------------------------------------------------------------------------
+volumes:
+  postgres_data:
+
+#-----------------------------------------------------------------------------------
+# Networks
+#-----------------------------------------------------------------------------------
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge

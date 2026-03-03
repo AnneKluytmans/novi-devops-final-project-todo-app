@@ -18,7 +18,7 @@ RUN npm run build
 #-----------------------------------------------------------------------------------
 FROM nginx:stable-alpine
 
-# Verwijder default config en voeg custom config toe
+# Delete default config and add custom config
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
