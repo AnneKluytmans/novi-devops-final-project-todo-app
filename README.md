@@ -213,8 +213,8 @@ todo-app/
 ├── docker-compose.yml
 └── .github/
    └── workflows/
-           └── frontend-cicd.yml 
-           └── backend-cicd.yml 
+           └── backend-ci-cd.yml 
+           └── frontend-ci-cd.yml 
 
 ```
 
