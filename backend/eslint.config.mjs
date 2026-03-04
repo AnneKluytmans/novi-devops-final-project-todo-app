@@ -3,32 +3,45 @@ import globals from "globals";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["node_modules", "dist"]),
+  globalIgnores(["dist", "node_modules"]),
 
   {
-    files: ["**/*.{js,mjs,cjs}"],
-
+    files: ["src/**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: globals.node,
+    },
+    plugins: {
+      js, 
+    },
     extends: [
       js.configs.recommended, 
     ],
-
-    env: {
-      node: true,            
-      es2022: true,          
-      jest: true,            
-    },
-
-    languageOptions: {
-      globals: globals.node,
-      parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
-      },
-    },
-
     rules: {
-      "no-unused-vars": ["warn", { varsIgnorePattern: "^[A-Z_]" }], 
-      "no-console": "off", 
+      "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
     },
   },
+
+  {
+    files: ["tests/**/*.{js,mjs,cjs}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+        ...globals.jest,  
+      },
+    },
+    plugins: {
+      js, 
+    },
+    extends: [
+      js.configs.recommended, 
+    ],
+    rules: {
+      "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
+    },
+  },
+
 ]);
