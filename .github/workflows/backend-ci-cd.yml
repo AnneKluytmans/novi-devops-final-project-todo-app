@@ -80,13 +80,13 @@ jobs:
       postgres:
        image: postgres:15
        env:
-        POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
-        POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-        POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: testdb
 
     env:
       NODE_ENV: test
-      DATABASE_URL: postgresql://${{ secrets.TEST_DB_USER }}:${{ secrets.TEST_DB_PASSWORD }}@postgres:5432/${{ secrets.TEST_DB_NAME }}
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/testdb
 
     steps:
       - name: Checkout Code
@@ -101,11 +101,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./backend
         run: npm ci
-
-      - name: Test DB connection
-        run: |
-          echo "Trying to connect..."
-          PGPASSWORD=${{ secrets.TEST_DB_PASSWORD }} psql -h postgres -U ${{ secrets.TEST_DB_USER }} -d ${{ secrets.TEST_DB_NAME }} -c "SELECT 1;"
 
       - name: Run integration tests
         working-directory: ./backend
