@@ -1,16 +1,13 @@
 const request = require('supertest');
 require('../../src/config/env');
+require('../setupTestDb'); 
 const app = require('../../src/app');
 const { pool } = require('../../src/db');
 
 describe('Todos API (integration)', () => {
 
   beforeEach(async () => {
-    await pool.query('DELETE FROM todos');
-  });
-
-  afterAll(async () => {
-    await pool.end();
+    await pool.query('DELETE FROM todos'); // start iedere test clean
   });
 
   // -------------------------
