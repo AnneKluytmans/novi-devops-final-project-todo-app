@@ -107,7 +107,7 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
-      - name: Debug DATABASE_URL host
+      - name: Debug DATABASE_URL
         run: |
           echo $DATABASE_URL | sed 's/:.*@/:***@/'
 
