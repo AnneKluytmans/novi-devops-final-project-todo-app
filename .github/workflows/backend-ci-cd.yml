@@ -76,10 +76,10 @@ jobs:
       matrix:
         node-version: [ 20, 22 ]
 
-  services:
-    postgres:
-      image: postgres:15
-      env:
+    services:
+      postgres:
+       image: postgres:15
+       env:
         POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
         POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
         POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
