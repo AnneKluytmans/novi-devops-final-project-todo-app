@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { pool } = require('./index');
 
 async function initDb() {
