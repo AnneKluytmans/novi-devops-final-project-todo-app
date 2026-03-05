@@ -1,4 +1,5 @@
 const request = require('supertest');
+require('../../src/config/env');
 const app = require('../../src/app');
 const { pool } = require('../../src/db');
 
