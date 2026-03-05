@@ -76,6 +76,23 @@ jobs:
       matrix:
         node-version: [ 20, 22 ]
 
+  services:
+    postgres:
+      image: postgres:15
+      env:
+        POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+        POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
+      options: >-
+        --health-cmd "pg_isready -U postgres"
+        --health-interval 5s
+        --health-timeout 5s
+        --health-retries 5
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://${{ secrets.TEST_DB_USER }}:${{ secrets.TEST_DB_PASSWORD }}@postgres:5432/${{ secrets.TEST_DB_NAME }}
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
