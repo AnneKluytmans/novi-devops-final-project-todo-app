@@ -86,7 +86,7 @@ jobs:
 
     env:
       NODE_ENV: test
-      DATABASE_URL: postgres://${{ secrets.TEST_DB_USER }}:${{ secrets.TEST_DB_PASSWORD }}@postgres:5432/${{ secrets.TEST_DB_NAME }}
+      DATABASE_URL: postgresql://${{ secrets.TEST_DB_USER }}:${{ secrets.TEST_DB_PASSWORD }}@postgres:5432/${{ secrets.TEST_DB_NAME }}
 
     steps:
       - name: Checkout Code
@@ -105,7 +105,7 @@ jobs:
       - name: Test DB connection
         run: |
           echo "Trying to connect..."
-          PGPASSWORD=${{ secrets.TEST_DB_PASSWORD }} psql -h postgres -U ${{ secrets.TEST_DB_USER }} -d ${{ secrets.TEST_DB_NAME }} -c '\l'
+          PGPASSWORD=${{ secrets.TEST_DB_PASSWORD }} psql -h postgres -U ${{ secrets.TEST_DB_USER }} -d ${{ secrets.TEST_DB_NAME }} -c "SELECT 1;"
 
       - name: Run integration tests
         working-directory: ./backend
