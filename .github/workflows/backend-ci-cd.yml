@@ -111,15 +111,6 @@ jobs:
         run: |
           echo $DATABASE_URL | sed 's/:.*@/:***@/'
 
-      - name: Test Node DB connection
-        run: |
-          node -e "
-          const { Client } = require('pg');
-          const client = new Client({ connectionString: process.env.DATABASE_URL });
-          client.connect()
-          .then(()=>{console.log('DB CONNECTED'); client.end();})
-          .catch(e=>{console.error(e); process.exit(1);});"
-
       - name: Run integration tests
         working-directory: ./backend
         run: npm run test:integration      
