@@ -103,7 +103,7 @@ jobs:
           path: backend/npm-audit.json
 
 
-    sast:
+  sast:
     name: SAST - CodeQL
     runs-on: ubuntu-latest
 
