@@ -100,3 +100,26 @@ jobs:
         with:
           name: npm-audit-report-node-${{ matrix.node-version }}
           path: frontend/npm-audit.json
+  
+
+  sast:
+    name: SAST - CodeQL
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
