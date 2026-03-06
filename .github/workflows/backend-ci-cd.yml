@@ -43,6 +43,7 @@ jobs:
         working-directory: ./backend
         run: npm run lint
 
+
   unit-test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -68,9 +69,66 @@ jobs:
         working-directory: ./backend
         run: npm run test:unit
 
+
+  dependency-scan:
+    name: Dependency scan - npm audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js version 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run npm audit
+        working-directory: ./backend
+        run: npm audit --audit-level=high || true
+
+      - name: Save audit report
+        working-directory: ./backend
+        run: npm audit --json > npm-audit.json || true
+      
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report-node-${{ matrix.node-version }}
+          path: backend/npm-audit.json
+
+
+  sast:
+    name: SAST - CodeQL
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+
+  
   integration-test:
     name: Integration Tests
-    needs: [lint, unit-test]
+    needs: [lint, unit-test, dependency-scan]
     runs-on: ubuntu-latest
 
     steps:
