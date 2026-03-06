@@ -67,3 +67,33 @@ jobs:
       - name: Run unit tests
         working-directory: ./backend
         run: npm run test:unit
+
+  integration-test:
+    name: Integration Tests
+    needs: [lint, unit-test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run integration tests
+        run: docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
+        env:
+          POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.TEST_DB_NAME }}
+          NODE_ENV: test
+      
+      - name: Cleanup test containers
+        run: docker compose -f docker-compose.test.yml down -v

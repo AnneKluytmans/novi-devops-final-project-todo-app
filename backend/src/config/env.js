@@ -1,11 +1,12 @@
 const path = require('path');
 const dotenv = require('dotenv');
 
-const envFile =
-  process.env.NODE_ENV === 'test'
-    ? '.env.test'
-    : '.env';
+const isCI = process.env.CI === 'true';
 
-dotenv.config({
-  path: path.resolve(process.cwd(), envFile),
-});
+if (!isCI) {
+  const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+  dotenv.config({
+    path: path.resolve(process.cwd(), envFile),
+  });
+}
+
