@@ -30,11 +30,12 @@ services:
   # Integration Test
   #-----------------------------------------------------------------------------------
   tests:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
     environment:
       NODE_ENV: ${NODE_ENV}
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
-    command: npm run test:integration
     depends_on:
       db:
         condition: service_healthy
