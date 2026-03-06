@@ -43,6 +43,7 @@ jobs:
         working-directory: ./backend
         run: npm run lint
 
+
   unit-test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -67,6 +68,43 @@ jobs:
       - name: Run unit tests
         working-directory: ./backend
         run: npm run test:unit
+
+
+  dependency-scan:
+    name: Dependency scan - npm audit
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 20, 22 ]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js version ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run npm audit
+        working-directory: ./backend
+        run: npm audit --audit-level=high || true
+
+      - name: Save audit report
+        working-directory: ./backend
+        run: npm audit --json > npm-audit.json || true
+      
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report-node-${{ matrix.node-version }}
+          path: backend/npm-audit.json
+
 
   integration-test:
     name: Integration Tests
