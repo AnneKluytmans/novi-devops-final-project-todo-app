@@ -226,7 +226,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Run Trivy container scan
-        uses: aquasecurity/trivy-action@v0.19.0
+        uses: aquasecurity/trivy-action@0.19.0
         continue-on-error: true
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ github.sha }}
