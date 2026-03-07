@@ -41,11 +41,15 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./backend
-        run: npm ci
+        run: |
+          echo "Installing project dependencies using npm ci..."
+          npm ci
 
       - name: Run linter
         working-directory: ./backend
-        run: npm run lint
+        run: |
+          echo "Running ESLint to ensure code quality and consistent style..."
+          npm run lint
 
 
   unit-test:
@@ -67,11 +71,15 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./backend
-        run: npm ci
+        run: |
+          echo "Installing project dependencies using npm ci..."
+          npm ci
 
       - name: Run unit tests
         working-directory: ./backend
-        run: npm run test:unit
+        run: |
+          echo "Running unit tests in CI mode..."
+          npm run test:unit
 
 
   dependency-scan:
@@ -90,11 +98,15 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./backend
-        run: npm ci
+        run: |
+          echo "Installing project dependencies using npm ci..."
+          npm ci
 
       - name: Run npm audit
         working-directory: ./backend
-        run: npm audit --audit-level=high || true
+        run: |
+          echo "Running npm audit to detect high or critical dependency vulnerabilities..."
+          npm audit --audit-level=high || true
 
       - name: Save audit report
         working-directory: ./backend
@@ -126,6 +138,9 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@v4
 
+      - name: Announce CodeQL Analysis
+        run: echo "Running static application security testing (SAST) with CodeQL..."
+      
       - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v4
 
@@ -147,10 +162,14 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./backend
-        run: npm ci
+        run: |
+          echo "Installing project dependencies using npm ci..."
+          npm ci
 
       - name: Run integration tests
-        run: docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
+        run: |
+          echo "Running integration tests with Docker Compose..."
+          docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
         env:
           POSTGRES_USER: ${{ secrets.TEST_DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
@@ -182,6 +201,7 @@ jobs:
 
       - name: Get version
         run: |
+          echo "Extracting backend version from package.json..."
           VERSION=$(node -p "require('./backend/package.json').version")
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 

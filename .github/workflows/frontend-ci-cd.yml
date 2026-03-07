@@ -37,11 +37,15 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: |
+          echo "Installing project dependencies using npm ci..."
+          npm ci
 
       - name: Run linter
         working-directory: ./frontend
-        run: npm run lint
+        run: |
+          echo "Running ESLint to ensure code quality and consistent style..."
+          npm run lint
 
   unit-test:
     name: Unit tests
@@ -62,11 +66,15 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: |
+          echo "Installing project dependencies using npm ci..."
+          npm ci
 
       - name: Run unit tests
         working-directory: ./frontend
-        run: npm run test:ci
+        run: |
+          echo "Running unit tests in CI mode..."
+          npm run test:ci
   
 
   dependency-scan:
@@ -85,11 +93,15 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: |
+          echo "Installing project dependencies using npm ci..."
+          npm ci
 
       - name: Run npm audit
         working-directory: ./frontend
-        run: npm audit --audit-level=high || true
+        run: |
+          echo "Running npm audit to detect high or critical dependency vulnerabilities..."
+          npm audit --audit-level=high || true
 
       - name: Save audit report
         working-directory: ./frontend
@@ -121,6 +133,9 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@v4
 
+      - name: Announce CodeQL Analysis
+        run: echo "Running static application security testing (SAST) with CodeQL..."
+      
       - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v4
   
@@ -142,11 +157,15 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: |
+          echo "Installing project dependencies using npm ci..."
+          npm ci
 
       - name: Build
         working-directory: ./frontend
-        run: npm run build
+        run: |
+          echo "Building the frontend application..."
+          npm run build
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
