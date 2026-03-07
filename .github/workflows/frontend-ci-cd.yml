@@ -123,3 +123,35 @@ jobs:
 
       - name: Run CodeQL Analysis
         uses: github/codeql-action/analyze@v4
+  
+
+  build:
+    name: Build and upload static artifact
+    needs: [lint, unit-test, dependency-scan, sast]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js version '20'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: ./frontend
+        run: npm run build
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/dist
+
+
