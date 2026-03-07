@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json 
 
       - name: Install dependencies
         working-directory: ./frontend
@@ -63,6 +64,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         working-directory: ./frontend
@@ -90,6 +92,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         working-directory: ./frontend
@@ -101,7 +104,7 @@ jobs:
         working-directory: ./frontend
         run: |
           echo "Running npm audit to detect high or critical dependency vulnerabilities..."
-          npm audit --audit-level=high || true
+          npm audit --omit=dev --audit-level=high || true
 
       - name: Save audit report
         working-directory: ./frontend
@@ -154,6 +157,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         working-directory: ./frontend
