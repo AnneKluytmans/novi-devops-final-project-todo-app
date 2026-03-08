@@ -9,13 +9,11 @@ on:
     paths-ignore:
       - 'docs/**'
       - '**/*.md'
-      - '*.md'
     
   pull_request:
     paths-ignore:
       - 'docs/**'
       - '**/*.md'
-      - '*.md'
       - 'frontend/**'
 
 concurrency:
@@ -285,3 +283,94 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
+  
+  deploy-staging:
+    name: Deploy Backend to Staging
+    runs-on: ubuntu-latest
+    needs: [ build-scan-push ]
+    if: github.ref != 'refs/heads/main' || github.event_name == 'pull_request'
+
+    steps:
+      - name: Trigger Backend Deploy to Staging
+        run: |
+          echo "🚀 Deploying backend to STAGING with Render..."
+          curl -X POST "${{ secrets.RENDER_STAGING_DEPLOY_HOOK_BACKEND }}"
+      
+      - name: Wait for deployment to be live
+        run: |
+          echo "⏳ Waiting for deployment..."
+          for i in {1..10}; do
+            # Check algemene API health
+            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/api/health; then
+              echo "🏆 API Deployment successful!"
+            else
+              echo "🔄 API not ready yet... retrying in 10s"
+              sleep 10
+            fi
+
+            # Check database health
+            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/api/health/db; then
+              echo "🏆 Database connection OK!"
+              exit 0
+            else
+              echo "🔄 Database not ready yet... retrying in 10s"
+              sleep 10
+            fi
+          done
+          echo "❌ Deployment failed"
+          exit 1
+
+      - name: Notify deployment
+        run: |
+          echo "=========================================="
+          echo "✅ DEPLOYMENT COMPLETE!!"
+          echo "=========================================="
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "==========================================" 
+
+
+  deploy-production:
+    name: Deploy Backend to Production
+    runs-on: ubuntu-latest
+    needs: [ build-scan-push ]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+      - name: Trigger Backend Deploy to Production
+        run: |
+          echo "🚀 Deploying backend to PRODUCTION with Render..."
+          curl -X POST "${{ secrets.RENDER_PROD_DEPLOY_HOOK_BACKEND }}"
+
+      - name: Wait for deployment to be live
+        run: |
+          echo "⏳ Waiting for deployment..."
+          for i in {1..10}; do
+            # Check algemene API health
+            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/api/health; then
+              echo "🏆 API Deployment successful!"
+            else
+              echo "🔄 API not ready yet... retrying in 10s"
+              sleep 10
+            fi
+
+            # Check database health
+            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/api/health/db; then
+              echo "🏆 Database connection OK!"
+              exit 0
+            else
+              echo "🔄 Database not ready yet... retrying in 10s"
+              sleep 10
+            fi
+          done
+          echo "❌ Deployment failed"
+          exit 1
+
+      - name: Notify deployment
+        run: |
+          echo "=========================================="
+          echo "✅ DEPLOYMENT COMPLETE!!"
+          echo "=========================================="
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "==========================================" 
