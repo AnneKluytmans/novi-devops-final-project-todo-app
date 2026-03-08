@@ -190,7 +190,7 @@ jobs:
     if: github.ref != 'refs/heads/main' || github.event_name == 'pull_request'
     
     steps:
-      - name: Trigger Frontend Staging Deploy 
+      - name: Trigger Frontend Deploy to Staging 
         run: |
           echo "🚀 Deploying frontend to STAGING with Render..."
           curl -X POST "${{ secrets.RENDER_STAGING_DEPLOY_HOOK_FRONTEND }}"
@@ -203,7 +203,7 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.event_name =='push'
     
     steps:
-      - name: Trigger Frontend Production Deploy 
+      - name: Trigger Frontend Deploy to Production
         run: |
           echo "🚀 Deploying frontend to PRODUCTION with Render..."
           curl -X POST "${{ secrets.RRENDER_PROD_DEPLOY_HOOK_FRONTEND }}"
