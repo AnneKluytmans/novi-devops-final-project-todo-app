@@ -306,7 +306,6 @@ jobs:
             else
               echo "🔄 API not ready yet... retrying in 10s"
               sleep 10
-              continue
             fi
 
             # Check database health
@@ -353,7 +352,6 @@ jobs:
             else
               echo "🔄 API not ready yet... retrying in 10s"
               sleep 10
-              continue
             fi
 
             # Check database health
