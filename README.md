@@ -23,7 +23,7 @@ This project contains a **Node.js REST API**, a **React frontend**, a **PostgreS
 
 ## CI CD Pipeline Status
 
-![backend CI/CD pipeline](https://github.com/AnneKluytmans/novi-devops-final-project-todo-app/actions/workflows/backend-ci-cd.yml/badge.svg)
+![backend CI/CD pipeline](https://github.com/AnneKluytmans/novi-devops-final-project-todo-app/actions/workflows/backend-ci-cd.yml/badge.svg?branch=main)
 
 ![frontend CI/CD pipeline](https://github.com/AnneKluytmans/novi-devops-final-project-todo-app/actions/workflows/frontend-ci-cd.yml/badge.svg)
 
