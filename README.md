@@ -8,6 +8,7 @@ This project contains a **Node.js REST API**, a **React frontend**, a **PostgreS
 
 ## Table of contents
 
+- [CI/CD pipeline status](#ci-cd-pipeline-status)
 - [Preview](#preview)
 - [Features](#features)
 - [API Endpoints](#api-endpoints)
@@ -19,6 +20,13 @@ This project contains a **Node.js REST API**, a **React frontend**, a **PostgreS
 - [License](#license)
 
 ---
+
+## CI CD Pipeline Status
+
+![backend CI/CD pipeline](https://github.com/AnneKluytmans/novi-devops-final-project-todo-app/actions/workflows/backend-ci-cd.yml/badge.svg)
+
+![frontend CI/CD pipeline](https://github.com/AnneKluytmans/novi-devops-final-project-todo-app/actions/workflows/frontend-ci-cd.yml/badge.svg)
+
 
 ## Preview
 
@@ -166,9 +174,18 @@ npm run test
 
 ---
 
-## 🐳 Docker
+## 🐳 Docker - GHCR
 
-Build and run the application with Docker ....
+Build and run the API with Docker
+
+```bash
+# Pull image
+docker pull ghcr.io/annekluytmans/todo-api:latest
+
+# Run container
+docker run -e DATABASE_URL=XXXXX -p 3000:3000 ghcr.io/annekluytmans/todo-api:latest
+```
+
 
 
 ---
@@ -195,7 +212,9 @@ todo-app/
 │          ├──todos.integration.test.js
 │       ├──unit/
 │          ├──todos.test.js
+│       ├──setupTestDb.js
 │   └── Dockerfile
+│   └── Dockerfile.test
 │
 ├── frontend/
 │   ├── public/
@@ -211,6 +230,7 @@ todo-app/
 │   └── Dockerfile
 │
 ├── docker-compose.yml
+├── docker-compose.test.yml
 └── .github/
    └── workflows/
            └── backend-ci-cd.yml 
