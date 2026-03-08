@@ -301,7 +301,7 @@ jobs:
           echo "⏳ Waiting for deployment..."
           for i in {1..10}; do
             # Check algemene API health
-            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/api/health; then
+            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/health; then
               echo "🏆 API Deployment successful!"
             else
               echo "🔄 API not ready yet... retrying in 10s"
@@ -309,7 +309,7 @@ jobs:
             fi
 
             # Check database health
-            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/api/health/db; then
+            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/health/db; then
               echo "🏆 Database connection OK!"
               exit 0
             else
@@ -347,7 +347,7 @@ jobs:
           echo "⏳ Waiting for deployment..."
           for i in {1..10}; do
             # Check algemene API health
-            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/api/health; then
+            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/health; then
               echo "🏆 API Deployment successful!"
             else
               echo "🔄 API not ready yet... retrying in 10s"
@@ -355,7 +355,7 @@ jobs:
             fi
 
             # Check database health
-            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/api/health/db; then
+            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/health/db; then
               echo "🏆 Database connection OK!"
               exit 0
             else
