@@ -183,3 +183,27 @@ jobs:
           path: frontend/dist
 
 
+  deploy-staging:
+    name: Deploy Frontend to Staging
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref != 'refs/heads/main' || github.event_name == 'pull_request'
+    
+    steps:
+      - name: Trigger Frontend Staging Deploy 
+        run: |
+          echo "🚀 Deploying frontend to STAGING with Render..."
+          curl -X POST "${{ secrets.RENDER_STAGING_DEPLOY_HOOK_FRONTEND }}"
+
+
+  deploy-production:
+    name: Deploy Frontend to Production
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/main' || github.event_name =='push'
+    
+    steps:
+      - name: Trigger Frontend Production Deploy 
+        run: |
+          echo "🚀 Deploying frontend to PRODUCTION with Render..."
+          curl -X POST "${{ secrets.RRENDER_PROD_DEPLOY_HOOK_FRONTEND }}"
