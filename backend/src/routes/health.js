@@ -1,6 +1,15 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const { pool } = require('../db');
 const router = express.Router();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minuten
+  max: 100, // max 100 requests per IP
+  message: { error: 'Too many requests, try again later.' }
+});
+
+router.use(limiter);
 
 router.get('/', (req, res) => {
   res.json({
