@@ -258,20 +258,43 @@ jobs:
         continue-on-error: true
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ github.sha }}
-          format: sarif
-          output: trivy-results.sarif
+          format: ${{ github.event_name == 'push' && 'sarif' || 'table' }}
+          output: ${{ github.event_name == 'push' && 'trivy-results.sarif' || 'trivy-results.txt' }}
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           scanners: vuln
-          exit-code: 1
+          vuln-type: library
 
-      - name: Upload Trivy results
+      - name: Upload Trivy results (SARIF)
+        if: github.event_name == 'push'
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
         with:
           sarif_file: trivy-results.sarif
-          ref: ${{ github.ref }}
-          sha: ${{ github.sha }}
+
+      - name: Upload Trivy report (TABLE)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-table-report
+          path: trivy-results.txt
+
+      - name: Fail on critical/high vulnerabilities
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            FILE="trivy-results.sarif"
+          else
+            FILE="trivy-results.txt"
+          fi
+
+          echo "Checking Trivy results in $FILE …"
+
+          # Check op CRITICAL of HIGH
+          if grep -q "CRITICAL\|HIGH" "$FILE"; then
+            echo "Found critical/high vulnerabilities!"
+            exit 1
+          else
+            echo "No critical/high vulnerabilities found."
+          fi
 
       - name: Push image
         if: success()
@@ -301,7 +324,7 @@ jobs:
           echo "⏳ Waiting for deployment..."
           for i in {1..10}; do
             # Check algemene API health
-            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/api/health; then
+            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/health; then
               echo "🏆 API Deployment successful!"
             else
               echo "🔄 API not ready yet... retrying in 10s"
@@ -309,7 +332,7 @@ jobs:
             fi
 
             # Check database health
-            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/api/health/db; then
+            if curl -f https://todo-app-annekluytmans-api-staging.onrender.com/health/db; then
               echo "🏆 Database connection OK!"
               exit 0
             else
@@ -347,7 +370,7 @@ jobs:
           echo "⏳ Waiting for deployment..."
           for i in {1..10}; do
             # Check algemene API health
-            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/api/health; then
+            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/health; then
               echo "🏆 API Deployment successful!"
             else
               echo "🔄 API not ready yet... retrying in 10s"
@@ -355,7 +378,7 @@ jobs:
             fi
 
             # Check database health
-            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/api/health/db; then
+            if curl -f https://todo-app-annekluytmans-api-production.onrender.com/health/db; then
               echo "🏆 Database connection OK!"
               exit 0
             else
