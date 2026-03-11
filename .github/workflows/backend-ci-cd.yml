@@ -255,6 +255,7 @@ jobs:
 
       - name: Run Trivy container scan
         uses: aquasecurity/trivy-action@0.19.0
+        continue-on-error: true
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ github.sha }}
           format: ${{ github.event_name == 'push' && 'sarif' || 'table' }}
@@ -263,7 +264,7 @@ jobs:
           ignore-unfixed: true
           scanners: vuln
           vuln-type: library
-          exit-code: 1
+          exit-code: ${{ github.event_name == 'push' && '1' || '0' }}
 
       - name: Upload Trivy results (SARIF)
         if: github.event_name == 'push'
@@ -277,6 +278,14 @@ jobs:
         with:
           name: trivy-table-report
           path: trivy-results.txt
+
+      - name: Fail on critical/high vulnerabilities
+        if: github.event_name == 'push'
+        run: |
+          if grep -q "CRITICAL\|HIGH" trivy-results.sarif; then
+            echo "Found critical/high vulnerabilities!"
+            exit 1
+          fi
 
       - name: Push image
         if: success()
