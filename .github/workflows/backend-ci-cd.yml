@@ -264,7 +264,6 @@ jobs:
           ignore-unfixed: true
           scanners: vuln
           vuln-type: library
-          exit-code: ${{ github.event_name == 'push' && '1' || '0' }}
 
       - name: Upload Trivy results (SARIF)
         if: github.event_name == 'push'
@@ -280,11 +279,21 @@ jobs:
           path: trivy-results.txt
 
       - name: Fail on critical/high vulnerabilities
-        if: github.event_name == 'push'
         run: |
-          if grep -q "CRITICAL\|HIGH" trivy-results.sarif; then
+          if [ "${{ github.event_name }}" = "push" ]; then
+            FILE="trivy-results.sarif"
+          else
+            FILE="trivy-results.txt"
+          fi
+
+          echo "Checking Trivy results in $FILE …"
+
+          # Check op CRITICAL of HIGH
+          if grep -q "CRITICAL\|HIGH" "$FILE"; then
             echo "Found critical/high vulnerabilities!"
             exit 1
+          else
+            echo "No critical/high vulnerabilities found."
           fi
 
       - name: Push image
