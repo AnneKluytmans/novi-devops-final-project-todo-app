@@ -262,7 +262,7 @@ jobs:
           output: ${{ github.event_name == 'push' && 'trivy-results.sarif' || 'trivy-results.txt' }}
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-          ignorefile: .trivyignore.yaml
+          trivyignores: .trivyignore.yaml
           scanners: vuln
           vuln-type: library
 
