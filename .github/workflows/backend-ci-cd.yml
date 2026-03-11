@@ -257,34 +257,22 @@ jobs:
         uses: aquasecurity/trivy-action@0.19.0
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ github.sha }}
-          format: sarif
-          output: trivy-results.sarif
+          format: ${{ github.event_name == 'push' && 'sarif' || 'table' }}
+          output: ${{ github.event_name == 'push' && 'trivy-results.sarif' || 'trivy-results.txt' }}
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           scanners: vuln
           vuln-type: library
           exit-code: 1
 
-      - name: Upload Trivy results
+      - name: Upload Trivy results (SARIF)
+        if: github.event_name == 'push'
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
         with:
           sarif_file: trivy-results.sarif
-          ref: ${{ github.ref }}
-          sha: ${{ github.sha }}
 
-      - name: Run Trivy container scan (table)
-        uses: aquasecurity/trivy-action@0.19.0
-        with:
-          image-ref: ${{ env.IMAGE }}:sha-${{ github.sha }}
-          format: table
-          output: trivy-results.txt
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
-          scanners: vuln
-          vuln-type: library
-
-      - name: Upload Trivy table report
+      - name: Upload Trivy report (TABLE)
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: trivy-table-report
