@@ -284,7 +284,7 @@ jobs:
           if [ "${{ github.event_name }}" = "push" ]; then
             FILE="trivy-results.sarif"
           else
-            FILE="trivy-results.txt"
+            FILE="trivy-results.json"
           fi
 
           echo "Checking Trivy results in $FILE …"
