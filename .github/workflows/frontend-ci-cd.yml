@@ -206,4 +206,4 @@ jobs:
       - name: Trigger Frontend Deploy to Production
         run: |
           echo "🚀 Deploying frontend to PRODUCTION with Render..."
-          curl -X POST "${{ secrets.RRENDER_PROD_DEPLOY_HOOK_FRONTEND }}"
+          curl -X POST "${{ secrets.RENDER_PROD_DEPLOY_HOOK_FRONTEND }}"
