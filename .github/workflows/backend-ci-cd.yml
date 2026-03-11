@@ -255,7 +255,6 @@ jobs:
 
       - name: Run Trivy container scan
         uses: aquasecurity/trivy-action@0.19.0
-        continue-on-error: true
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ github.sha }}
           format: sarif
@@ -263,6 +262,7 @@ jobs:
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           scanners: vuln
+          vuln-type: library
           exit-code: 1
 
       - name: Upload Trivy results
@@ -272,6 +272,23 @@ jobs:
           sarif_file: trivy-results.sarif
           ref: ${{ github.ref }}
           sha: ${{ github.sha }}
+
+      - name: Run Trivy container scan (table)
+        uses: aquasecurity/trivy-action@0.19.0
+        with:
+          image-ref: ${{ env.IMAGE }}:sha-${{ github.sha }}
+          format: table
+          output: trivy-results.txt
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          scanners: vuln
+          vuln-type: library
+
+      - name: Upload Trivy table report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-table-report
+          path: trivy-results.txt
 
       - name: Push image
         if: success()
