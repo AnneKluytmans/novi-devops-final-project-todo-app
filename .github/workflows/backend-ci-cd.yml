@@ -258,12 +258,12 @@ jobs:
         continue-on-error: true
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ github.sha }}
-          format: ${{ github.event_name == 'push' && 'sarif' || 'table' }}
-          output: ${{ github.event_name == 'push' && 'trivy-results.sarif' || 'trivy-results.txt' }}
+          format: ${{ github.event_name == 'push' && 'sarif' || 'json' }}
+          output: ${{ github.event_name == 'push' && 'trivy-results.sarif' || 'trivy-results.json' }}
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           scanners: vuln
-          vuln-type: library
+          vuln-type: os, library
 
       - name: Upload Trivy results (SARIF)
         if: github.event_name == 'push'
@@ -271,19 +271,19 @@ jobs:
         with:
           sarif_file: trivy-results.sarif
 
-      - name: Upload Trivy report (TABLE)
+      - name: Upload Trivy report (JSON)
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
-          name: trivy-table-report
-          path: trivy-results.txt
+          name: trivy-report-json
+          path: trivy-results.json
 
       - name: Fail on critical/high vulnerabilities
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
             FILE="trivy-results.sarif"
           else
-            FILE="trivy-results.txt"
+            FILE="trivy-results.json"
           fi
 
           echo "Checking Trivy results in $FILE …"
