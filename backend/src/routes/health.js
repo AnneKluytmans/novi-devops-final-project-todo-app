@@ -1,6 +1,7 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const { pool } = require('../db');
+const { version } = require('../../package.json');
 const router = express.Router();
 
 const limiter = rateLimit({
@@ -14,6 +15,7 @@ router.use(limiter);
 router.get('/', (req, res) => {
   res.json({
     status: 'healthy',
+    version: version,
     service: 'novisoft-todo-api',
     environment: process.env.NODE_ENV || 'development',
     container: require('os').hostname(),
