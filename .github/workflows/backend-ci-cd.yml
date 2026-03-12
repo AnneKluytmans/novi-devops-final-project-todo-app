@@ -283,8 +283,7 @@ jobs:
           if [ "${{ github.event_name }}" = "push" ]; then
             FILE="trivy-results.sarif"
           else
-            echo "No critical/high vulnerabilities found."
-            exit 0
+            FILE="trivy-results.json"
           fi
 
           echo "Checking Trivy results in $FILE …"
