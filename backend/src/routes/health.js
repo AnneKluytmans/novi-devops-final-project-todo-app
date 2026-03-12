@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
     status: 'healthy',
     version: version,
     service: 'novisoft-todo-api',
-    environment: process.env.NODE_ENV || 'development',
+    environment: process.env.NODE_ENV || 'production',
     container: require('os').hostname(),
   });
 });
